@@ -29,7 +29,7 @@ export class GameMgr extends Component {
     }
 
     lateUpdate(deltaTime: number) {
-        if (this._init == false) {
+        if (this._init === false) {
             console.log('lateUpdate');
             this._init = true;
         }

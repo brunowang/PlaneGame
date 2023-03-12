@@ -25,12 +25,18 @@
       },
       {
         "__id__": 23
+      },
+      {
+        "__id__": 32
+      },
+      {
+        "__id__": 31
       }
     ],
     "_active": true,
     "_components": [],
     "_prefab": {
-      "__id__": 30
+      "__id__": 33
     },
     "_lpos": {
       "__type__": "cc.Vec3",
@@ -61,7 +67,7 @@
     },
     "autoReleaseAssets": false,
     "_globals": {
-      "__id__": 31
+      "__id__": 34
     },
     "_id": "45c94a94-0fe0-4cd5-a73a-27922887bed0"
   },
@@ -671,7 +677,7 @@
     "_priority": 1073741824,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 332.25626740947075,
+    "_orthoHeight": 320,
     "_near": 1,
     "_far": 2000,
     "_color": {
@@ -779,7 +785,146 @@
     "playerPlane": {
       "__id__": 12
     },
+    "gameMgr": {
+      "__id__": 30
+    },
     "_id": "b6SusalhBDC4XshmHFD9CQ"
+  },
+  {
+    "__type__": "e95ce9KWK5DGImX+j5qbDvE",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 31
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "playerPlane": {
+      "__id__": 12
+    },
+    "bullets": [
+      {
+        "__uuid__": "4d9095ee-99f1-44ec-9f65-37a24ccb652b",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "dec6c42a-4d65-4e56-93d4-badc2c6449e8",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "93f32b24-e0b4-4acf-9cab-199c3a64cbfb",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "d5f45c06-9eb3-492a-aef4-1b77e7e534cc",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "fc7497b4-c93b-4cd6-b922-898906ac6092",
+        "__expectedType__": "cc.Prefab"
+      }
+    ],
+    "shootTIme": 0.2,
+    "bulletSpeed": 2,
+    "bulletRoot": {
+      "__id__": 32
+    },
+    "enemies": [
+      {
+        "__uuid__": "a33033db-ce3a-4d04-a82c-b61be5c66ae8",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "3c97f19c-720e-4992-8445-8e1a70496fd0",
+        "__expectedType__": "cc.Prefab"
+      }
+    ],
+    "createEnemyTime": 1,
+    "_id": "b67z7E63hA8YiUspodbDZT"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "gameMgr",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 30
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "b5fuFivTBFcrKshYQnOkrh"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "bulletRoot",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 1073741824,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "bbY4Jz+rhNb7uuiO304Ydx"
   },
   {
     "__type__": "cc.PrefabInfo",
@@ -797,22 +942,22 @@
   {
     "__type__": "cc.SceneGlobals",
     "ambient": {
-      "__id__": 32
-    },
-    "shadows": {
-      "__id__": 33
-    },
-    "_skybox": {
-      "__id__": 34
-    },
-    "fog": {
       "__id__": 35
     },
-    "octree": {
+    "shadows": {
       "__id__": 36
     },
-    "lightProbeInfo": {
+    "_skybox": {
       "__id__": 37
+    },
+    "fog": {
+      "__id__": 38
+    },
+    "octree": {
+      "__id__": 39
+    },
+    "lightProbeInfo": {
+      "__id__": 40
     },
     "bakedWithStationaryMainLight": false
   },
