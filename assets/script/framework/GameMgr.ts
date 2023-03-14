@@ -1,4 +1,4 @@
-import {_decorator, Component, Node, Prefab, instantiate, math, Vec3} from 'cc';
+import {_decorator, Component, Node, Prefab, instantiate, math, Vec3, BoxCollider} from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
@@ -71,6 +71,10 @@ export class GameMgr extends Component {
         }
     }
 
+    public addScore() {
+
+    }
+
     public createPlayerBullet() {
         const bullet = instantiate(this.bullets[0]);
         bullet.setParent(this.bulletRoot);
@@ -87,6 +91,10 @@ export class GameMgr extends Component {
         bullet.setPosition(pos.x, pos.y, pos.z + 6);
         const bulletComp = bullet.getComponent(Bullet);
         bulletComp.show(this.bulletSpeed, true);
+
+        const colliderComp = bullet.getComponent(BoxCollider);
+        colliderComp.setGroup(Constant.CollisionType.ENEMY_BULLET);
+        colliderComp.setMask(Constant.CollisionType.SELF_PLANE);
     }
 
     public createEnemyPlane() {
