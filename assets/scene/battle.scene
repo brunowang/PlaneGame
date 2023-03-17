@@ -444,7 +444,7 @@
   },
   {
     "__type__": "cc.PrefabInstance",
-    "fileId": "6enaKnCzNAc5deItOtKAvj",
+    "fileId": "b4heXpfFdLv59bFz8X9rXg",
     "prefabRootNode": null,
     "mountedChildren": [],
     "mountedComponents": [],
@@ -803,6 +803,25 @@
       }
     ],
     "createEnemyTime": 1,
+    "bulletProps": [
+      {
+        "__uuid__": "4b7a04c2-d915-4fc2-8ddb-d8274bea63f4",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "2bcce0df-4782-45b9-9de2-cc5e10089f09",
+        "__expectedType__": "cc.Prefab"
+      },
+      {
+        "__uuid__": "9ddc3e65-de10-498e-8455-8a09d5b9e6d0",
+        "__expectedType__": "cc.Prefab"
+      }
+    ],
+    "bulletPropSpeed": {
+      "__type__": "cc.Vec2",
+      "x": 0.3,
+      "y": 0.3
+    },
     "_id": "b67z7E63hA8YiUspodbDZT"
   },
   {

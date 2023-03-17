@@ -1,7 +1,8 @@
-import {_decorator, Component, Node, Prefab, instantiate, math, Vec3, BoxCollider} from 'cc';
+import {_decorator, Component, Node, Prefab, instantiate, math, Vec3, BoxCollider, macro, Vec2} from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
+import {BulletProp} from "db://assets/script/bullet/BulletProp";
 
 const {ccclass, property} = _decorator;
 
@@ -23,11 +24,17 @@ export class GameMgr extends Component {
     public enemies: Prefab[] = Array<Prefab>();
     @property
     public createEnemyTime = 1;
+    // bullet props
+    @property([Prefab])
+    public bulletProps: Prefab[] = Array<Prefab>();
+    @property
+    public bulletPropSpeed: Vec2 = new Vec2(0.3, 0.3);
 
     private _currShootTIme = 0;
     private _isShooting = false;
     private _currCreateEnemyTime = 0;
     private _combinationInterval = Constant.Combination.PLAN1;
+    private _bulletType = Constant.BulletPropType.BULLET_M;
 
     start() {
         this._init();
@@ -151,8 +158,34 @@ export class GameMgr extends Component {
         }
     }
 
+    public createBulletProp() {
+        const randomProp = math.randomRangeInt(
+            Constant.BulletPropType.BULLET_M, Constant.BulletPropType.BULLET_S + 1);
+        let prefab: Prefab = null;
+        switch (randomProp) {
+            case Constant.BulletPropType.BULLET_M:
+                prefab = this.bulletProps[0];
+                break;
+            case Constant.BulletPropType.BULLET_H:
+                prefab = this.bulletProps[1];
+                break;
+            case Constant.BulletPropType.BULLET_S:
+                prefab = this.bulletProps[2];
+                break;
+        }
+        const prop = instantiate(prefab);
+        prop.setParent(this.node);
+        prop.setPosition(15, 0, -50);
+        const propComp = prop.getComponent(BulletProp);
+        propComp.show(this, this.bulletPropSpeed);
+    }
+
     public isShooting(value: boolean) {
         this._isShooting = value;
+    }
+
+    public changeBulletType(type: number) {
+        this._bulletType = type;
     }
 
     private _init() {
@@ -161,11 +194,12 @@ export class GameMgr extends Component {
     }
 
     private _changePlaneMode() {
-        this.schedule(this._modeChanged, 10, 3);
+        this.schedule(this._modeChanged, 10, macro.REPEAT_FOREVER);
     }
 
     private _modeChanged() {
         this._combinationInterval++;
+        this.createBulletProp();
     }
 }
 
