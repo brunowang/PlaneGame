@@ -1,5 +1,4 @@
-import {_decorator, Component, Node, Collider, ITriggerEvent} from 'cc';
-import {Constant} from "db://assets/script/framework/Constant";
+import {_decorator, Collider, Component, ITriggerEvent} from 'cc';
 
 const {ccclass, property} = _decorator;
 
@@ -10,6 +9,8 @@ export class Bullet extends Component {
     private _bulletSpeed = 0;
 
     private _isEnemyBullet = false;
+
+    private _tanAngle = 0;
 
     onEnable() {
         const collider = this.getComponent(Collider);
@@ -29,22 +30,23 @@ export class Bullet extends Component {
         } else {
             movedZ = pos.z - this._bulletSpeed;
         }
-        this.node.setPosition(pos.x, pos.y, movedZ);
+        this.node.setPosition(pos.x + this._tanAngle * this._bulletSpeed, pos.y, movedZ);
 
         if ((this._isEnemyBullet && movedZ > BULLET_MAX_BOUNCE) ||
             (!this._isEnemyBullet && movedZ < -BULLET_MAX_BOUNCE)) {
+            // console.log('bullet destroy', this._isEnemyBullet);
             this.node.destroy();
-            console.log('bullet destroy', this._isEnemyBullet);
         }
     }
 
-    show(speed: number, isEnemyBullet: boolean) {
+    show(speed: number, isEnemyBullet: boolean, tanAngle = 0) {
         this._bulletSpeed = speed;
         this._isEnemyBullet = isEnemyBullet;
+        this._tanAngle = tanAngle;
     }
 
     private _onTriggerEnter(event: ITriggerEvent) {
-        console.log('trigger bullet destroy');
+        // console.log('trigger bullet destroy');
         this.node.destroy();
     }
 }

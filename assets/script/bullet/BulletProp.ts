@@ -1,4 +1,4 @@
-import {_decorator, Component, Node, Vec2, Collider, ITriggerEvent} from 'cc';
+import {_decorator, Collider, Component, ITriggerEvent, Vec2} from 'cc';
 import {GameMgr} from "db://assets/script/framework/GameMgr";
 import {Constant} from "db://assets/script/framework/Constant";
 
@@ -38,15 +38,15 @@ export class BulletProp extends Component {
     }
 
     private _onTriggerEnter(event: ITriggerEvent) {
-        const name = event.selfCollider.name;
+        const name = event.selfCollider.node.name;
         switch (name) {
-            case 'bulletM':
+            case 'bulletPropM':
                 this._gameMgr.changeBulletType(Constant.BulletPropType.BULLET_M);
                 break;
-            case 'bulletH':
+            case 'bulletPropH':
                 this._gameMgr.changeBulletType(Constant.BulletPropType.BULLET_H);
                 break;
-            case 'bulletS':
+            case 'bulletPropS':
                 this._gameMgr.changeBulletType(Constant.BulletPropType.BULLET_S);
                 break;
         }

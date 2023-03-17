@@ -1,4 +1,4 @@
-import {_decorator, Component, Node, Prefab, instantiate, math, Vec3, BoxCollider, macro, Vec2} from 'cc';
+import {_decorator, BoxCollider, Component, instantiate, macro, math, Node, Prefab, Vec2, Vec3} from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
@@ -43,7 +43,13 @@ export class GameMgr extends Component {
     update(deltaTime: number) {
         this._currShootTIme += deltaTime;
         if (this._isShooting && this._currShootTIme > this.shootTIme) {
-            this.createPlayerBullet();
+            if (this._bulletType === Constant.BulletPropType.BULLET_H) {
+                this.createPlayerBulletH();
+            } else if (this._bulletType === Constant.BulletPropType.BULLET_S) {
+                this.createPlayerBulletS();
+            } else {
+                this.createPlayerBulletM();
+            }
             this._currShootTIme = 0;
         }
 
@@ -82,13 +88,34 @@ export class GameMgr extends Component {
 
     }
 
-    public createPlayerBullet() {
-        const bullet = instantiate(this.bullets[0]);
+    private _createPlayerBullet(pos: Vec3, bulletPrefab: Prefab, tanAngle = 0) {
+        const bullet = instantiate(bulletPrefab);
         bullet.setParent(this.bulletRoot);
-        const pos = this.playerPlane.position;
         bullet.setPosition(pos.x, pos.y, pos.z - 7);
         const bulletComp = bullet.getComponent(Bullet);
-        bulletComp.show(this.bulletSpeed, false);
+        bulletComp.show(this.bulletSpeed, false, tanAngle);
+    }
+
+    public createPlayerBulletM() {
+        const pos = this.playerPlane.position;
+        this._createPlayerBullet(pos, this.bullets[0]);
+    }
+
+    public createPlayerBulletH() {
+        const p = this.playerPlane.position;
+        let pos = new Vec3(p.x - 2.5, p.y, p.z);
+        this._createPlayerBullet(pos, this.bullets[2]);
+        pos = new Vec3(p.x + 2.5, p.y, p.z);
+        this._createPlayerBullet(pos, this.bullets[2]);
+    }
+
+    public createPlayerBulletS() {
+        const p = this.playerPlane.position;
+        this._createPlayerBullet(p, this.bullets[4]);
+        let pos = new Vec3(p.x - 4, p.y, p.z);
+        this._createPlayerBullet(pos, this.bullets[4], -0.2);
+        pos = new Vec3(p.x + 4, p.y, p.z);
+        this._createPlayerBullet(pos, this.bullets[4], 0.2);
     }
 
     public createEnemyBullet(targetPos: Vec3) {
