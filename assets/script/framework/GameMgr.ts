@@ -1,23 +1,11 @@
-import {
-    _decorator,
-    Animation,
-    BoxCollider,
-    Component,
-    instantiate,
-    Label,
-    macro,
-    math,
-    Node,
-    Prefab,
-    Vec2,
-    Vec3
-} from 'cc';
+import {_decorator, Animation, BoxCollider, Component, Label, macro, math, Node, Prefab, Vec2, Vec3} from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
 import {BulletProp} from "db://assets/script/bullet/BulletProp";
 import {SelfPlane} from "db://assets/script/plane/SelfPlane";
 import {AudioMgr} from "db://assets/script/framework/AudioMgr";
+import {PoolMgr} from "db://assets/script/framework/PoolMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -105,7 +93,7 @@ export class GameMgr extends Component {
                 this._currCreateEnemyTime = 0;
             }
         } else if (this._combinationInterval === Constant.Combination.PLAN2) {
-            if (this._currCreateEnemyTime > this.createEnemyTime * 0.8) {
+            if (this._currCreateEnemyTime > this.createEnemyTime * 3) {
                 const randomCombination = math.randomRangeInt(0, 100);
                 if (randomCombination < 20) {
                     this.createCombination1();
@@ -115,7 +103,7 @@ export class GameMgr extends Component {
                 this._currCreateEnemyTime = 0;
             }
         } else {
-            if (this._currCreateEnemyTime > this.createEnemyTime * 0.6) {
+            if (this._currCreateEnemyTime > this.createEnemyTime * 2) {
                 const randomCombination = math.randomRangeInt(0, 100);
                 if (randomCombination < 20) {
                     this.createCombination1();
@@ -174,11 +162,14 @@ export class GameMgr extends Component {
     }
 
     private _createPlayerBullet(pos: Vec3, bulletPrefab: Prefab, tanAngle = 0) {
-        const bullet = instantiate(bulletPrefab);
-        bullet.setParent(this.bulletRoot);
+        const bullet = PoolMgr.instance().getNode(bulletPrefab, this.bulletRoot);
         bullet.setPosition(pos.x, pos.y, pos.z - 7);
         const bulletComp = bullet.getComponent(Bullet);
         bulletComp.show(this.bulletSpeed, false, tanAngle);
+
+        const colliderComp = bullet.getComponent(BoxCollider);
+        colliderComp.setGroup(Constant.CollisionType.SELF_BULLET);
+        colliderComp.setMask(Constant.CollisionType.ENEMY_PLANE);
     }
 
     public createPlayerBulletM() {
@@ -204,8 +195,7 @@ export class GameMgr extends Component {
     }
 
     public createEnemyBullet(targetPos: Vec3) {
-        const bullet = instantiate(this.bullets[0]);
-        bullet.setParent(this.bulletRoot);
+        const bullet = PoolMgr.instance().getNode(this.bullets[0], this.bulletRoot);
         const pos = targetPos
         bullet.setPosition(pos.x, pos.y, pos.z + 6);
         const bulletComp = bullet.getComponent(Bullet);
@@ -218,8 +208,7 @@ export class GameMgr extends Component {
 
     public createEnemyPlane() {
         const whichEnemy = math.randomRangeInt(0, this.enemies.length);
-        const enemy = instantiate(this.enemies[whichEnemy]);
-        enemy.setParent(this.node);
+        const enemy = PoolMgr.instance().getNode(this.enemies[whichEnemy], this.node);
         const enemyComp = enemy.getComponent(EnemyPlane);
         let enemySpeed = 0.5;
         if (whichEnemy != 0) {
@@ -235,9 +224,8 @@ export class GameMgr extends Component {
     public createCombination1() {
         const enemyArray = new Array<Node>(5);
         for (let i = 0; i < enemyArray.length; i++) {
-            enemyArray[i] = instantiate(this.enemies[0]);
+            enemyArray[i] = PoolMgr.instance().getNode(this.enemies[0], this.node);
             const enemy = enemyArray[i];
-            enemy.parent = this.node;
             enemy.setPosition(-20 + i * 10, 0, -50);
             const enemyComp = enemy.getComponent(EnemyPlane);
             const enemySpeed = 0.5;
@@ -259,9 +247,8 @@ export class GameMgr extends Component {
         ]
 
         for (let i = 0; i < enemyArray.length; i++) {
-            enemyArray[i] = instantiate(this.enemies[1]);
+            enemyArray[i] = PoolMgr.instance().getNode(this.enemies[1], this.node);
             const enemy = enemyArray[i];
-            enemy.parent = this.node;
             const posIndex = i * 3;
             enemy.setPosition(combinationPos[posIndex], combinationPos[posIndex + 1], combinationPos[posIndex + 2]);
             const enemyComp = enemy.getComponent(EnemyPlane);
@@ -285,8 +272,7 @@ export class GameMgr extends Component {
                 prefab = this.bulletProps[2];
                 break;
         }
-        const prop = instantiate(prefab);
-        prop.setParent(this.node);
+        const prop = PoolMgr.instance().getNode(prefab, this.node);
         prop.setPosition(15, 0, -50);
         const propComp = prop.getComponent(BulletProp);
         propComp.show(this, this.bulletPropSpeed);
@@ -324,14 +310,14 @@ export class GameMgr extends Component {
         let i = 0;
         for (i = length - 1; i >= 0; i--) {
             const child = children[i];
-            child.destroy();
+            PoolMgr.instance().putNode(child);
         }
 
         children = this.bulletRoot.children;
         length = children.length;
         for (i = length - 1; i >= 0; i--) {
             const child = children[i];
-            child.destroy();
+            PoolMgr.instance().putNode(child);
         }
     }
 }

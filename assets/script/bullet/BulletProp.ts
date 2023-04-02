@@ -1,6 +1,7 @@
 import {_decorator, Collider, Component, ITriggerEvent, Vec2} from 'cc';
 import {GameMgr} from "db://assets/script/framework/GameMgr";
 import {Constant} from "db://assets/script/framework/Constant";
+import {PoolMgr} from "db://assets/script/framework/PoolMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -28,7 +29,7 @@ export class BulletProp extends Component {
         this.node.setPosition(pos.x + this._speed.x, pos.y, pos.z + this._speed.y);
 
         if (this.node.position.z > 50) {
-            this.node.destroy();
+            PoolMgr.instance().putNode(this.node);
         }
     }
 
@@ -50,7 +51,7 @@ export class BulletProp extends Component {
                 this._gameMgr.changeBulletType(Constant.BulletPropType.BULLET_S);
                 break;
         }
-        this.node.destroy();
+        PoolMgr.instance().putNode(this.node);
     }
 }
 

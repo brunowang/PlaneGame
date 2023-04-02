@@ -1,6 +1,7 @@
 import {_decorator, Collider, Component, ITriggerEvent} from 'cc';
 import {GameMgr} from "db://assets/script/framework/GameMgr";
 import {Constant} from "db://assets/script/framework/Constant";
+import {PoolMgr} from "db://assets/script/framework/PoolMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -40,8 +41,8 @@ export class EnemyPlane extends Component {
         }
 
         if (this.node.position.z > ENEMY_MAX_BOUNCE) {
-            this.node.destroy();
-            console.log('enemy destroy');
+            PoolMgr.instance().putNode(this.node);
+            // console.log('enemy destroy');
         }
     }
 
@@ -57,7 +58,7 @@ export class EnemyPlane extends Component {
             collisionGroup === Constant.CollisionType.SELF_BULLET) {
             // console.log('trigger enemy destroy');
             this._gameMgr.playAudioEffect('enemy');
-            this.node.destroy();
+            PoolMgr.instance().putNode(this.node);
             this._gameMgr.addScore();
         }
     }

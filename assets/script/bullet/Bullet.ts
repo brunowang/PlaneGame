@@ -1,4 +1,5 @@
 import {_decorator, Collider, Component, ITriggerEvent} from 'cc';
+import {PoolMgr} from "db://assets/script/framework/PoolMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -35,7 +36,7 @@ export class Bullet extends Component {
         if ((this._isEnemyBullet && movedZ > BULLET_MAX_BOUNCE) ||
             (!this._isEnemyBullet && movedZ < -BULLET_MAX_BOUNCE)) {
             // console.log('bullet destroy', this._isEnemyBullet);
-            this.node.destroy();
+            PoolMgr.instance().putNode(this.node);
         }
     }
 
@@ -47,7 +48,7 @@ export class Bullet extends Component {
 
     private _onTriggerEnter(event: ITriggerEvent) {
         // console.log('trigger bullet destroy');
-        this.node.destroy();
+        PoolMgr.instance().putNode(this.node);
     }
 }
 
