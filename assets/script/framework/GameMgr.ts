@@ -27,6 +27,9 @@ export class GameMgr extends Component {
     public enemies: Prefab[] = Array<Prefab>();
     @property
     public createEnemyTime = 1;
+    // explode effect
+    @property(Prefab)
+    public enemyExplode: Prefab = null;
     // bullet props
     @property([Prefab])
     public bulletProps: Prefab[] = Array<Prefab>();
@@ -123,23 +126,23 @@ export class GameMgr extends Component {
         this._combinationInterval = Constant.Combination.PLAN1;
         this._bulletType = Constant.BulletPropType.BULLET_M;
         this.playerPlane.node.setPosition(0, 0, 15);
-        this._score = 0;
     }
 
     public gameStart() {
         this.isGameStart = true;
         this._changePlaneMode();
+        this._score = 0;
+        this.gameScore.string = this._score.toString();
+        this.playerPlane.init();
     }
 
     public gameRestart() {
-        this.isGameStart = true;
+        this.gameStart();
         this._currShootTIme = 0;
         this._currCreateEnemyTime = 0;
-        this._changePlaneMode();
         this._combinationInterval = Constant.Combination.PLAN1;
         this._bulletType = Constant.BulletPropType.BULLET_M;
         this.playerPlane.node.setPosition(0, 0, 15);
-        this._score = 0;
     }
 
     public gameOver() {
@@ -147,11 +150,8 @@ export class GameMgr extends Component {
         this.gamePage.active = false;
         this.gameOverPage.active = true;
         this.gameOverScore.string = this._score.toString();
-        this._score = 0;
-        this.gameScore.string = this._score.toString();
         this.overAnim.play();
         this._isShooting = false;
-        this.playerPlane.init();
         this.unschedule(this._modeChanged);
         this._destroyAll();
     }
@@ -255,6 +255,11 @@ export class GameMgr extends Component {
             const enemySpeed = 0.8;
             enemyComp.show(this, enemySpeed, false);
         }
+    }
+
+    public createEnemyExplodeEffect(pos: Vec3) {
+        const eff = PoolMgr.instance().getNode(this.enemyExplode, this.node);
+        eff.setPosition(pos);
     }
 
     public createBulletProp() {
