@@ -60,6 +60,7 @@ export class EnemyPlane extends Component {
             this._gameMgr.playAudioEffect('enemy');
             PoolMgr.instance().putNode(this.node);
             this._gameMgr.addScore();
+            this._gameMgr.createEnemyExplodeEffect(this.node.position);
         }
     }
 }
