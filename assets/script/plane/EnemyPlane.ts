@@ -1,4 +1,4 @@
-import {_decorator, Component, Node, ITriggerEvent, Collider} from 'cc';
+import {_decorator, Collider, Component, ITriggerEvent} from 'cc';
 import {GameMgr} from "db://assets/script/framework/GameMgr";
 import {Constant} from "db://assets/script/framework/Constant";
 
@@ -55,7 +55,8 @@ export class EnemyPlane extends Component {
         const collisionGroup = event.otherCollider.getGroup();
         if (collisionGroup === Constant.CollisionType.SELF_PLANE ||
             collisionGroup === Constant.CollisionType.SELF_BULLET) {
-            console.log('trigger enemy destroy');
+            // console.log('trigger enemy destroy');
+            this._gameMgr.playAudioEffect('enemy');
             this.node.destroy();
             this._gameMgr.addScore();
         }

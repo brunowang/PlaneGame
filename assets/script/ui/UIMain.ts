@@ -40,12 +40,14 @@ export class UIMain extends Component {
     public restart() {
         this.gameOver.active = false;
         this.gaming.active = true;
+        this.gameMgr.playAudioEffect('button');
         this.gameMgr.gameRestart();
     }
 
     public returnMain() {
         this.gameOver.active = false;
         this.gameStart.active = true;
+        this.gameMgr.playAudioEffect('button');
         this.gameMgr.returnMain();
     }
 
@@ -55,6 +57,7 @@ export class UIMain extends Component {
         } else {
             this.gameStart.active = false;
             this.gaming.active = true;
+            this.gameMgr.playAudioEffect('button');
             this.gameMgr.gameStart();
         }
     }

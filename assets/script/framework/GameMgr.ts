@@ -1,5 +1,6 @@
 import {
     _decorator,
+    Animation,
     BoxCollider,
     Component,
     instantiate,
@@ -9,14 +10,14 @@ import {
     Node,
     Prefab,
     Vec2,
-    Vec3,
-    Animation
+    Vec3
 } from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
 import {BulletProp} from "db://assets/script/bullet/BulletProp";
 import {SelfPlane} from "db://assets/script/plane/SelfPlane";
+import {AudioMgr} from "db://assets/script/framework/AudioMgr";
 
 const {ccclass, property} = _decorator;
 
@@ -55,6 +56,10 @@ export class GameMgr extends Component {
     @property(Animation)
     public overAnim: Animation = null;
 
+    // audio
+    @property(AudioMgr)
+    public audioEffect: AudioMgr = null;
+
     public isGameStart = false;
 
     private _currShootTIme = 0;
@@ -87,6 +92,9 @@ export class GameMgr extends Component {
             } else {
                 this.createPlayerBulletM();
             }
+
+            const name = 'bullet' + (this._bulletType % 2 + 1);
+            this.playAudioEffect(name);
             this._currShootTIme = 0;
         }
 
@@ -139,6 +147,7 @@ export class GameMgr extends Component {
         this.isGameStart = true;
         this._currShootTIme = 0;
         this._currCreateEnemyTime = 0;
+        this._changePlaneMode();
         this._combinationInterval = Constant.Combination.PLAN1;
         this._bulletType = Constant.BulletPropType.BULLET_M;
         this.playerPlane.node.setPosition(0, 0, 15);
@@ -289,6 +298,10 @@ export class GameMgr extends Component {
 
     public changeBulletType(type: number) {
         this._bulletType = type;
+    }
+
+    public playAudioEffect(name: string) {
+        this.audioEffect.play(name);
     }
 
     private _init() {
