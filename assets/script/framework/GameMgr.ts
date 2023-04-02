@@ -1,15 +1,29 @@
-import {_decorator, BoxCollider, Component, instantiate, macro, math, Node, Prefab, Vec2, Vec3} from 'cc';
+import {
+    _decorator,
+    BoxCollider,
+    Component,
+    instantiate,
+    Label,
+    macro,
+    math,
+    Node,
+    Prefab,
+    Vec2,
+    Vec3,
+    Animation
+} from 'cc';
 import {Bullet} from "db://assets/script/bullet/Bullet";
 import {Constant} from "db://assets/script/framework/Constant";
 import {EnemyPlane} from "db://assets/script/plane/EnemyPlane";
 import {BulletProp} from "db://assets/script/bullet/BulletProp";
+import {SelfPlane} from "db://assets/script/plane/SelfPlane";
 
 const {ccclass, property} = _decorator;
 
 @ccclass('GameMgr')
 export class GameMgr extends Component {
-    @property(Node)
-    public playerPlane: Node = null;
+    @property(SelfPlane)
+    public playerPlane: SelfPlane = null;
     // bullets
     @property([Prefab])
     public bullets: Prefab[] = Array<Prefab>();
@@ -30,17 +44,40 @@ export class GameMgr extends Component {
     @property
     public bulletPropSpeed: Vec2 = new Vec2(0.3, 0.3);
 
+    @property(Node)
+    public gamePage: Node = null;
+    @property(Node)
+    public gameOverPage: Node = null;
+    @property(Label)
+    public gameScore: Label = null;
+    @property(Label)
+    public gameOverScore: Label = null;
+    @property(Animation)
+    public overAnim: Animation = null;
+
+    public isGameStart = false;
+
     private _currShootTIme = 0;
     private _isShooting = false;
     private _currCreateEnemyTime = 0;
     private _combinationInterval = Constant.Combination.PLAN1;
     private _bulletType = Constant.BulletPropType.BULLET_M;
+    private _score = 0;
 
     start() {
         this._init();
     }
 
     update(deltaTime: number) {
+        if (!this.isGameStart) {
+            return;
+        }
+
+        if (this.playerPlane.isDead) {
+            this.gameOver();
+            return;
+        }
+
         this._currShootTIme += deltaTime;
         if (this._isShooting && this._currShootTIme > this.shootTIme) {
             if (this._bulletType === Constant.BulletPropType.BULLET_H) {
@@ -84,8 +121,47 @@ export class GameMgr extends Component {
         }
     }
 
-    public addScore() {
+    public returnMain() {
+        this._currShootTIme = 0;
+        this._currCreateEnemyTime = 0;
+        this._combinationInterval = Constant.Combination.PLAN1;
+        this._bulletType = Constant.BulletPropType.BULLET_M;
+        this.playerPlane.node.setPosition(0, 0, 15);
+        this._score = 0;
+    }
 
+    public gameStart() {
+        this.isGameStart = true;
+        this._changePlaneMode();
+    }
+
+    public gameRestart() {
+        this.isGameStart = true;
+        this._currShootTIme = 0;
+        this._currCreateEnemyTime = 0;
+        this._combinationInterval = Constant.Combination.PLAN1;
+        this._bulletType = Constant.BulletPropType.BULLET_M;
+        this.playerPlane.node.setPosition(0, 0, 15);
+        this._score = 0;
+    }
+
+    public gameOver() {
+        this.isGameStart = false;
+        this.gamePage.active = false;
+        this.gameOverPage.active = true;
+        this.gameOverScore.string = this._score.toString();
+        this._score = 0;
+        this.gameScore.string = this._score.toString();
+        this.overAnim.play();
+        this._isShooting = false;
+        this.playerPlane.init();
+        this.unschedule(this._modeChanged);
+        this._destroyAll();
+    }
+
+    public addScore() {
+        this._score++;
+        this.gameScore.string = this._score.toString();
     }
 
     private _createPlayerBullet(pos: Vec3, bulletPrefab: Prefab, tanAngle = 0) {
@@ -97,12 +173,12 @@ export class GameMgr extends Component {
     }
 
     public createPlayerBulletM() {
-        const pos = this.playerPlane.position;
+        const pos = this.playerPlane.node.position;
         this._createPlayerBullet(pos, this.bullets[0]);
     }
 
     public createPlayerBulletH() {
-        const p = this.playerPlane.position;
+        const p = this.playerPlane.node.position;
         let pos = new Vec3(p.x - 2.5, p.y, p.z);
         this._createPlayerBullet(pos, this.bullets[2]);
         pos = new Vec3(p.x + 2.5, p.y, p.z);
@@ -110,7 +186,7 @@ export class GameMgr extends Component {
     }
 
     public createPlayerBulletS() {
-        const p = this.playerPlane.position;
+        const p = this.playerPlane.node.position;
         this._createPlayerBullet(p, this.bullets[4]);
         let pos = new Vec3(p.x - 4, p.y, p.z);
         this._createPlayerBullet(pos, this.bullets[4], -0.2);
@@ -217,7 +293,7 @@ export class GameMgr extends Component {
 
     private _init() {
         this._currShootTIme = this.shootTIme;
-        this._changePlaneMode();
+        this.playerPlane.init();
     }
 
     private _changePlaneMode() {
@@ -227,6 +303,23 @@ export class GameMgr extends Component {
     private _modeChanged() {
         this._combinationInterval++;
         this.createBulletProp();
+    }
+
+    private _destroyAll() {
+        let children = this.node.children;
+        let length = children.length;
+        let i = 0;
+        for (i = length - 1; i >= 0; i--) {
+            const child = children[i];
+            child.destroy();
+        }
+
+        children = this.bulletRoot.children;
+        length = children.length;
+        for (i = length - 1; i >= 0; i--) {
+            const child = children[i];
+            child.destroy();
+        }
     }
 }
 
