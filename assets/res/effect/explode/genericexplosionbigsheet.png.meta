@@ -2,7 +2,7 @@
   "ver": "1.0.25",
   "importer": "image",
   "imported": true,
-  "uuid": "598853cd-bb8d-481b-a5dc-25d59eb20ffc",
+  "uuid": "5b04aabd-c660-4a01-b251-a9cf1803b10a",
   "files": [
     ".json",
     ".png"
@@ -10,7 +10,7 @@
   "subMetas": {
     "6c48a": {
       "importer": "texture",
-      "uuid": "598853cd-bb8d-481b-a5dc-25d59eb20ffc@6c48a",
+      "uuid": "5b04aabd-c660-4a01-b251-a9cf1803b10a@6c48a",
       "displayName": "genericexplosionbigsheet",
       "id": "6c48a",
       "name": "texture",
@@ -22,7 +22,7 @@
         "mipfilter": "none",
         "anisotropy": 0,
         "isUuid": true,
-        "imageUuidOrDatabaseUri": "598853cd-bb8d-481b-a5dc-25d59eb20ffc",
+        "imageUuidOrDatabaseUri": "5b04aabd-c660-4a01-b251-a9cf1803b10a",
         "visible": true
       },
       "ver": "1.0.22",
@@ -34,9 +34,9 @@
     }
   },
   "userData": {
-    "fixAlphaTransparencyArtifacts": true,
     "hasAlpha": true,
     "type": "texture",
-    "redirect": "598853cd-bb8d-481b-a5dc-25d59eb20ffc@6c48a"
+    "redirect": "5b04aabd-c660-4a01-b251-a9cf1803b10a@6c48a",
+    "fixAlphaTransparencyArtifacts": false
   }
 }
